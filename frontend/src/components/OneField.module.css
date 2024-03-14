@@ -1,0 +1,32 @@
+.OneField {
+    display: flex;
+    width: 50vw;
+    background-color: transparent;
+    justify-content: center;
+    background-color: rgba(255, 255, 255, 0.2);
+    margin: auto;
+    border-radius: 10px;
+    padding: 5px;
+}
+
+.OneField button {
+    outline: 0;
+    border: 0;
+    background-color: transparent;
+    transition: 0.2s;
+    cursor: pointer;
+}
+
+.OneField button:hover {
+    transform: scale(1.2);
+}
+
+.OneField input {
+    width: 90vw;
+    background-color: transparent;
+    outline: 0;
+    border: 0;
+    font-size: 20px;
+    color: white;
+    padding: 5px;
+}

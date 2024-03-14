@@ -1,0 +1,39 @@
+.TwoFields {
+    display: flex;
+    flex-direction: column;
+    width: 50vw;
+    height: 25vh;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(150, 150, 150, 0.2);
+    border-radius: 10px;
+    padding: 5px;
+}
+
+.TwoFields input {
+    margin: 10px;
+    border: 0;
+    border-radius: 10px;
+    font-size: 20px;
+    text-align: center;
+    outline: 0;
+    background-color: rgba(255, 255, 255, 0.2);
+    color: white;
+    box-shadow: inset 2px 2px 5px black;
+    width: 40vw;
+    padding: 5px;
+}
+
+.TwoFields button {
+    outline: 0;
+    border: 0;
+    background-color: transparent;
+    transition: 0.2s;
+    cursor: pointer;
+    justify-content: center;
+    margin: 10px;
+}
+
+.TwoFields button:hover {
+    transform: scale(1.3);
+}
