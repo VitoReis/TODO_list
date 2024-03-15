@@ -16,7 +16,7 @@ const create = async function(req, res) {
                 message: "Task created."
             })
         }else{
-            return res.status(200).json({
+            return res.status(500).json({
                 title: "Create failed",
                 message: "Try again."
             })
@@ -24,7 +24,7 @@ const create = async function(req, res) {
     }catch(error){
         return res.status(500).json({
             title: "Create error",
-            message: "Unable to create task."
+            message: error
         })
     }
 }
@@ -54,7 +54,7 @@ const update = async function(req, res) {
     }catch(error){
         return res.status(500).json({
             title: "Update error",
-            message: "Unable to update task."
+            message: error
         })
     }
 }
@@ -66,7 +66,6 @@ const search = async function(req, res) {
         const task = await Task.findOne({
             description: description
         })
-        console.log(typeof(task))
 
         if(task){
             return res.status(200).json(task)
@@ -80,7 +79,7 @@ const search = async function(req, res) {
     }catch(error){
         return res.status(500).json({
             title: "Search error",
-            message: "Unable to create task."
+            message: error
         })
     }
 }
@@ -107,18 +106,18 @@ const exclude = async function(req, res) {
     }catch(error){
         return res.status(500).json({
             title: "Delete error",
-            message: "Unable to delete task."
+            message: error
         })
     }
 }
 
 const done = async function(req, res) {
-    const { description, done } = req.body
+    const { description } = req.body
     
     try{
         const setDone = await Task.findOneAndUpdate(
             {description: description},
-            {done: done}
+            {done: 1}
         )
         
         if(setDone){
@@ -135,18 +134,18 @@ const done = async function(req, res) {
     }catch(error){
         return res.status(500).json({
             title: "Concluding error",
-            message: "Unable to set task to done."
+            message: error
         })
     }
 }
 
 const hide = async function(req, res) {
-    const { description, hide } = req.body
+    const { description } = req.body
     
     try{
         const setHide = await Task.findOneAndUpdate(
-            {description: description},
-            {hide: hide}
+            {description: description, done: 1},
+            {hide: 1}
         )
         
         if(setHide){
@@ -163,31 +162,31 @@ const hide = async function(req, res) {
     }catch(error){
         return res.status(500).json({
             title: "Hidding error",
-            message: "Unable to hide task."
+            message: error
         })
     }
 }
 
 const readAll = async function(req, res) {
     try{
-        const tasks = await Task.find({})
+        const tasks = await Task.find({hide: 0})
         return res.status(200).json(tasks)
     }catch(error){
         return res.status(500).json({
             title: "Read error",
-            message: "Unable to read all tasks."
+            message: error
         })
     }
 }
 
 const readDone = async function(req, res) {
     try{
-        const tasks = await Task.find({done: 1})
+        const tasks = await Task.find({done: 1, hide: 0})
         return res.status(200).json(tasks)
     }catch(error){
         return res.status(500).json({
             title: "Read error",
-            message: "Unable to read all done tasks."
+            message: error
         })
     }
 }
@@ -199,7 +198,7 @@ const readHide = async function(req, res) {
     }catch(error){
         return res.status(500).json({
             title: "Read error",
-            message: "Unable to read all hidden tasks."
+            message: error
         })
     }
 }

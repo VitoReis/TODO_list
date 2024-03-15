@@ -1,8 +1,8 @@
 .TwoFields {
     display: flex;
     flex-direction: column;
-    width: 50vw;
-    height: 25vh;
+    width: 35vw;
+    height: 40vh;
     justify-content: center;
     align-items: center;
     background-color: rgba(150, 150, 150, 0.2);
@@ -20,7 +20,8 @@
     background-color: rgba(255, 255, 255, 0.2);
     color: white;
     box-shadow: inset 2px 2px 5px black;
-    width: 40vw;
+    width: 30vw;
+    height: 5vh;
     padding: 5px;
 }
 

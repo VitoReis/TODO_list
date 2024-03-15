@@ -1,7 +1,7 @@
 import './App.css';
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import axios from 'axios'
-import { IoIosAdd, IoIosApps, IoIosArrowRoundBack, IoIosCheckmark, IoIosSearch, IoIosBuild, IoIosAlbums, IoIosEye, IoIosTrash, IoIosArchive } from 'react-icons/io'
+import { IoIosAdd, IoIosCheckmarkCircleOutline, IoIosArrowRoundBack, IoIosCheckmark, IoIosSearch, IoIosBuild, IoIosEye, IoIosTrash, IoIosArchive, IoIosRadioButtonOff } from 'react-icons/io'
 // COMPONENTS
 import TwoFields from './components/TwoFields'
 import OneField from './components/OneField'
@@ -12,8 +12,8 @@ function App() {
   const [description, setDescription] = useState('')
   const [duedate, setDuedate] = useState('')
   const [screen, setScreen] = useState(0)
-  const [result, setResult] = useState('')
-  const [list, setList] = useState()
+  const [result, setResult] = useState(new Object())
+  const [list, setList] = useState(new Object())
 
   function handleReturn(){
     setDescription('')
@@ -25,106 +25,60 @@ function App() {
 
   async function handleAdd(){
     try {
-      const response = await axios.post('http://localhost:3001/create', { "description": description, "duedate": duedate }, {
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      })
-      if(response){
-        window.alert('Tarefa adicionada com sucesso')
-        handleReturn()
-      }else{
-        window.alert('Não foi possivel adicionar a tarefa')
-      }
+      const response = await axios.post('http://localhost:3001/create', { "description": description, "duedate": duedate })
+      window.alert('Tarefa adicionada com sucesso')
+      handleReturn() 
     } catch (error) {
-      window.alert('Houve um erro com o servidor, tente novamente')
+      window.alert('Não foi possivel adicionar a tarefa')
     }
   }
 
   async function handleUpdate(){
     try{
-      const response = await axios.put('http://localhost:3001/update', { "description": description, "duedate": duedate }, {
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      })
-      if(response){
-        window.alert('Tarefa atualizada com sucesso')
-        handleReturn()
-      }else{
-        window.alert('Não foi possivel atualizar a tarefa')
-      }
+      const response = await axios.put('http://localhost:3001/update', { "description": description, "duedate": duedate })
+      window.alert('Tarefa atualizada com sucesso')
+      handleReturn()
     } catch (error) {
-      window.alert('Houve um erro com o servidor, tente novamente')
+      window.alert('Não foi possivel atualizar a tarefa')
     }
   }
 
   async function handleSearch(){
     try {
-      const response = await axios.post('http://localhost:3001/search', { "description": description }, {
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      })
-      if(response){
-        setResult(response.data)
-      }else{
-        window.alert('Tarefa não encontrada')
-      }
+      const response = await axios.post('http://localhost:3001/search', { "description": description })
+      setResult(response.data)
     } catch (error) {
-      window.alert('Houve um erro com o servidor, tente novamente')
+      window.alert('Tarefa não encontrada, tente novamente')
     }
   }
 
   async function handleDelete(){
     try {
-      const response = await axios.delete('http://localhost:3001/delete', { "description": result.description }, {
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      })
-      if(response){
-        window.alert('Tarefa excluida com sucesso')
-        handleReturn()
-      }else{
-        window.alert('Não foi possivel excluir a tarefa')
-      }
+      const response = await axios.delete('http://localhost:3001/delete', { data: {"description": result.description} })
+      window.alert('Tarefa excluida com sucesso')
+      handleReturn()
     } catch (error) {
-      window.alert('Houve um erro com o servidor, tente novamente')
-    }
-  }
-
-  async function handleHide(){
-    try {
-      const response = await axios.put('http://localhost:3001/delete', { "hide": 1 }, {
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      })
-      if(response){
-        window.alert('Tarefa arquivada com sucesso')
-      }else{
-        window.alert('Não foi possivel arquivar a tarefa')
-      }
-    } catch (error) {
-      window.alert('Houve um erro com o servidor, tente novamente')
+      window.alert('Não foi possivel excluir a tarefa')
     }
   }
 
   async function handleDone(){
     try {
-      const response = await axios.put('http://localhost:3001/delete', { "done": 1 }, {
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      })
-      if(response){
-        window.alert('Tarefa concluida com sucesso')
-      }else{
-        window.alert('Não foi possivel concluir a tarefa')
-      }
+      const response = await axios.put('http://localhost:3001/done', { "description": result.description })
+      window.alert('Tarefa concluida com sucesso')
+      handleReturn()
     } catch (error) {
-      window.alert('Houve um erro com o servidor, tente novamente')
+      window.alert('Não foi possivel concluir a tarefa')
+    }
+  }
+
+  async function handleHide(){
+    try {
+      const response = await axios.put('http://localhost:3001/hide', { "description": result.description })
+      window.alert('Tarefa arquivada com sucesso')
+      handleReturn()
+    } catch (error) {
+      window.alert('Não foi possivel arquivar a tarefa')
     }
   }
 
@@ -161,7 +115,6 @@ function App() {
     }
   }
 
-
   return (
     <div className="App">
 
@@ -171,9 +124,9 @@ function App() {
           <button onClick={()=>{setScreen(1)}}>Adicionar tarefa <IoIosAdd size='20' /></button>
           <button onClick={()=>{setScreen(2)}}>Atualizar tarefa <IoIosBuild size='20' /></button>
           <button onClick={()=>{setScreen(3)}}>Pesquisar tarefa <IoIosSearch size='20' /></button>
-          <button onClick={handleListAll}>Visualizar todas as tarefas <IoIosEye size='20' /><IoIosAlbums size='20' /></button>
-          <button onClick={handleListDone}>Visualizar tarefas concluidas <IoIosEye size='20' /><IoIosCheckmark size='20' /></button>
-          <button onClick={handleListHide}>Visualizar tarefas arquivadas <IoIosEye size='20' /><IoIosArchive size='20' /></button>
+          <button onClick={handleListAll}>Visualizar tarefas <IoIosEye size='20' /></button>
+          <button onClick={handleListDone}>Visualizar tarefas concluidas <IoIosEye size='20' /></button>
+          <button onClick={handleListHide}>Visualizar tarefas arquivadas <IoIosEye size='20' /></button>
         </section>
       )}
 
@@ -229,18 +182,18 @@ function App() {
         
         {Object.keys(result).length > 0 && (
           <section className='Result'>
-            <p>{result.description}</p>
-            <p>{result.duedate.getDate()}/{result.duedate.getMonth() + 1}/{result.duedate.getFullYear()}</p>
+            <p>Descrição: {result.description}</p>
+            <p>Data: {new Date(result.duedate).getDate() + 1}/{new Date(result.duedate).getMonth() + 1}/{new Date(result.duedate).getFullYear()}</p>
             {result.done == 0 
-              ? <button onClick={handleDone}>Concluir tarefa <IoIosCheckmark size='20' color='green'/></button>
-              : <p>Tarefa concluida <IoIosCheckmark size='20' color='green'/></p>
+              ? <button onClick={handleDone}>Concluir tarefa <IoIosCheckmarkCircleOutline size='20' color='white'/></button>
+              : <p>Concluida <IoIosCheckmarkCircleOutline size='20' color='white'/></p>
             }
             {result.hide == 0 ?
-              <button onClick={handleHide}>Arquivar tarefa <IoIosApps size='20' color='yellow'/></button>
+              <button onClick={handleHide}>Arquivar tarefa <IoIosArchive size='20' color='white'/></button>
               :
-              <p>Tarefa arquivada <IoIosArchive size='20' color='yellow'/></p>
+              <p>Tarefa arquivada <IoIosArchive size='20' color='white'/></p>
             }
-            <button onClick={handleDelete}>Excluir tarefa <IoIosTrash size='20' color='red'/></button>
+            <button onClick={handleDelete}>Excluir tarefa <IoIosTrash size='20' color='white'/></button>
             
           </section>
         )}
@@ -249,25 +202,25 @@ function App() {
 
       {screen === 4 && (
         <section className='All'>
-          <h1>Todas as tarefas</h1>
+          <h1>Tarefas</h1>
           <List list={list} />
-          <button onClick={handleReturn}><IoIosArrowRoundBack size='20' color='black' /> Voltar</button>
+          <button className='ReturnButton' onClick={handleReturn}><IoIosArrowRoundBack size='40' color='white' /></button>
         </section>
       )}
 
       {screen === 5 && (
         <section className='AllDone'>
-          <h1>Todas as tarefas concluidas</h1>
+          <h1>Tarefas concluidas</h1>
           <List list={list} />
-          <button onClick={handleReturn}><IoIosArrowRoundBack size='20' color='black' /> Voltar</button>
+          <button className='ReturnButton' onClick={handleReturn}><IoIosArrowRoundBack size='40' color='white' /></button>
         </section>
       )}
 
       {screen === 6 && (
         <section className='AllHide'>
-          <h1>Todas as tarefas arquivadas</h1>
+          <h1>Tarefas arquivadas</h1>
           <List list={list} />
-          <button onClick={handleReturn}><IoIosArrowRoundBack size='20' color='black' /> Voltar</button>
+          <button className='ReturnButton' onClick={handleReturn}><IoIosArrowRoundBack size='40' color='white' /></button>
         </section>
       )}
     </div>
