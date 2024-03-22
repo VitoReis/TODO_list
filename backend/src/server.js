@@ -9,7 +9,6 @@ app.use(router)
 require('dotenv').config()
 const PORT = process.env.PORT || 3001
 const MONGOURL = process.env.MONGOURL
-console.log(MONGOURL)
 
 const mongoose = require('mongoose')
 mongoose.connect(MONGOURL)
