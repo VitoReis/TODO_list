@@ -26,7 +26,7 @@ export default function Main() {
     return (
         <section className={ styles.Main }>
             <section className={ styles.Options }>
-                <h1>TODO list</h1>
+                <h1>Opções</h1>
                 <button onClick={()=>{navigate('/add')}}>Adicionar tarefa <IoIosAdd size='20' /></button>
                 <button onClick={()=>{navigate('/update')}}>Atualizar tarefa <IoIosBuild size='20' /></button>
                 <button onClick={()=>{navigate('/search')}}>Pesquisar tarefa <IoIosSearch size='20' /></button>
